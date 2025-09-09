@@ -31,9 +31,11 @@ const Header = ({ isLoggedIn, setIsLoggedIn }: HeaderProps) => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 primary-gradient rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">IR</span>
-            </div>
+            <img 
+              src="/favicon.ico" 
+              alt="Insu-Raksha Logo" 
+              className="w-10 h-10 rounded-lg"
+            />
             <span className="text-2xl font-display font-bold text-foreground">
               Insu-Raksha
             </span>
