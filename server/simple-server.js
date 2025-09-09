@@ -9,7 +9,20 @@ import GoogleSheetsService from "./googleSheetsService.js";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// Configure CORS to allow your Netlify domain
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'https://*.netlify.app',
+    'https://*.vercel.app',
+    'https://swatilizien.github.io'
+  ],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Initialize Google Sheets service
@@ -435,7 +448,7 @@ app.post("/api/init-sheets", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log('📊 Google Sheets integration active');
   console.log('💾 Using in-memory storage (no MongoDB required)');

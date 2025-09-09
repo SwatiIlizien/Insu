@@ -3,7 +3,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "cd server && node simple-server.js",
+    "startCommand": "cd server && npm install && node simple-server.js",
     "healthcheckPath": "/api/commission-info"
   }
 }
