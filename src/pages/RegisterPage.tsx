@@ -1,0 +1,130 @@
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+
+const RegisterPage = ({ setIsLoggedIn, setUserPhone }) => {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handlePhoneChange = e => {
+    // Remove non-digit characters and limit to 10 digits
+    const value = e.target.value.replace(/\D/g, "").slice(0, 10);
+    setPhone(value);
+    setPhoneError(value.length < 10 ? "Phone number must be 10 digits" : "");
+  };
+
+  const handleRegister = async () => {
+    if (!phone || !password || !name) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (phoneError) {
+      toast({
+        title: "Invalid Phone Number",
+        description: "Please fix the errors before submitting",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const res = await fetch("http://localhost:5000/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, password }),
+      });
+      const data = await res.json();
+      if (data.message === "User registered successfully") {
+        toast({
+          title: "Registration Successful!",
+          description: "Your account has been created. Please login to continue.",
+          variant: "default",
+        });
+        navigate("/login");
+      } else {
+        toast({
+          title: "Registration Failed",
+          description: data.message || "Unable to create account. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Network Error",
+        description: "Unable to connect. Please check your internet and try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-primary/10 to-secondary/10">
+      <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
+        <h2 className="text-3xl font-bold mb-6 text-primary text-center">
+          Create Account
+        </h2>
+        <div className="space-y-4">
+          <input
+            className="w-full border border-primary/30 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary transition"
+            placeholder="Full Name *"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            required
+          />
+          <input
+            className={`w-full border ${
+              phoneError ? "border-red-500" : "border-primary/30"
+            } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary transition`}
+            placeholder="Phone Number *"
+            value={phone}
+            onChange={handlePhoneChange}
+            type="tel"
+            maxLength={10}
+            required
+          />
+          {phoneError && (
+            <div className="text-red-500 text-sm">{phoneError}</div>
+          )}
+          <input
+            className="w-full border border-primary/30 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary transition"
+            type="password"
+            placeholder="Password *"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            required
+          />
+          <button
+            className="w-full bg-primary text-white font-semibold py-3 rounded-lg shadow hover:bg-primary/90 transition disabled:opacity-50"
+            onClick={handleRegister}
+            disabled={isLoading}
+          >
+            {isLoading ? "Registering..." : "Register"}
+          </button>
+        </div>
+        <div className="mt-6 text-center text-muted-foreground">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-primary font-semibold hover:underline"
+          >
+            Login
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default RegisterPage;
