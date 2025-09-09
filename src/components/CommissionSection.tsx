@@ -40,7 +40,8 @@ const CommissionSection = ({ isLoggedIn, userPhone }: CommissionSectionProps) =>
 
   const fetchCommissionInfo = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/commission-info");
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const response = await fetch(`${apiUrl}/api/commission-info`);
       const data = await response.json();
       setCommissionInfo(data);
     } catch (error) {
@@ -62,7 +63,8 @@ const CommissionSection = ({ isLoggedIn, userPhone }: CommissionSectionProps) =>
 
     try {
       // Track the referral
-      await fetch("http://localhost:5000/api/track-referral", {
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      await fetch(`${apiUrl}/api/track-referral`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 

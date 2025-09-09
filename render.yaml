@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: insu-raksha-api
+    env: node
+    buildCommand: cd server && npm install
+    startCommand: cd server && node simple-server.js
+    healthCheckPath: /api/commission-info
