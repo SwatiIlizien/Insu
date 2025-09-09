@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend API for Insu-Raksha insurance website",
   "main": "simple-server.js",
+  "type": "module",
   "scripts": {
     "start": "node simple-server.js",
     "dev": "node simple-server.js"
